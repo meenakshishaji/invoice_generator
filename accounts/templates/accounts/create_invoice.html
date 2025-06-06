@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Create Invoice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f5f7fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    .invoice-page {
+      width: 100%;
+      max-width: 900px;
+      background: white;
+      margin: 30px auto;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+    }
+
+    @media print {
+      body {
+        background-color: white;
+      }
+
+      .invoice-page {
+        box-shadow: none;
+        border-radius: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .no-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="invoice-page">
+
+    <!-- Invoice Title -->
+    <div>
+      <h2 class="fw-bold mb-1">Invoice <span class="text-muted">#{{ invoice_number }}</span></h2>
+      <p class="text-muted mb-3">May 13, 2025</p>
+    </div>
+
+    <!-- Button Row  -->
+    <div class="d-flex gap-2 mb-4 no-print">
+      <button class="btn btn-success">Share</button>
+      <button onclick="downloadAsPDF()" class="btn btn-success no-print">Download</button>
+
+      <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+          More options
+        </button>
+        <ul class="dropdown-menu">
+
+          <li><a class="dropdown-item" href="#">Mark as Paid</a></li>
+          {% if invoice and invoice.id %}
+          <a href="{% url 'edit_invoice' invoice.id %}" class="btn btn-primary">Edit</a>
+          {% endif %}
+          <li>
+            <button type="button" class="dropdown-item" onclick="submitFormToSave()">Save</button>
+          </li>
+
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item text-danger" href="#">Delete</a></li>
+        </ul>
+      </div>
+    </div>
+
+
+    <!-- Horizontal line -->
+    <hr class="my-4">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <!-- Left side: Logo and addresses -->
+      <div style="flex: 1;">
+        {% if logo %}
+        <img src="{{ logo }}" alt="Logo" style="max-height: 80px;" class="mb-3">
+        {% else %}
+        <div class="logo-placeholder small-logo mb-3" style="cursor:pointer;">+ Add Logo</div>
+        {% endif %}
+        <!-- From Section -->
+        <div class="mb-2">
+          <p><strong></strong><br>{{ from }}</p>
+        </div>
+
+        <!-- Bill To and Ship To  -->
+        <div class="d-flex gap-4 mb-4">
+          <div style="flex: 1;">
+            <p><strong>Bill To:</strong><br>{{ bill_to }}</p>
+          </div>
+          <div style="flex: 1;">
+            <p><strong>Ship To:</strong><br>{{ ship_to }}</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right side: Invoice details -->
+      <div style="width: 280px;">
+        <h2 class="fw-bold text-end">INVOICE</h2>
+        <p class="text-end"><strong>#{{ invoice_number }}</strong></p>
+
+        <p class="text-end"><strong>Date:</strong> {{ invoice_date }}</p>
+        <p class="text-end"><strong>Payment Terms:</strong> {{ payment_terms }}</p>
+        <p class="text-end"><strong>Due Date:</strong> {{ due_date }}</p>
+        <p class="text-end"><strong>PO Number:</strong> {{ po_number }}</p>
+      </div>
+    </div>
+
+
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th style="width: 50%;">Item</th>
+            <th style="width: 10%;">Quantity</th>
+            <th style="width: 20%;">Rate</th>
+            <th style="width: 20%;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+          <tr>
+            <td>{{ item.description }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.rate }}</td>
+            <td class="text-end amount-cell" data-quantity="{{ item.quantity }}" data-rate="{{ item.rate }}"></td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <!----------------------subtotal ------------------------>
+
+    <div class="row justify-content-end mt-4">
+      <div class="col-md-6">
+        <table class="table borderless">
+          <tr>
+            <td class="text-end"><strong>Subtotal:</strong></td>
+            <td class="text-end" id="subtotal">$0.00</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Tax:</strong></td>
+            <td class="text-end" id="tax">${{ tax }}</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Discount:</strong></td>
+            <td class="text-end" id="discount">${{ discount }}</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Shipping:</strong></td>
+            <td class="text-end" id="shipping">${{ shipping }}</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Total:</strong></td>
+            <td class="text-end" id="total">$0.00</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Amount Paid:</strong></td>
+            <td class="text-end" id="amount_paid">${{ amount_paid }}</td>
+          </tr>
+          <tr>
+            <td class="text-end"><strong>Balance Due:</strong></td>
+            <td class="text-end" id="balance_due">$0.00</td>
+          </tr>
+
+        </table>
+      </div>
+    </div>
+
+
+
+    <div class="mt-4" style="max-width: 60%;">
+      {% if terms %}
+      <h6 class="fw-bold">Terms</h6>
+      <p>{{ terms }}</p>
+      {% endif %}
+
+      {% if notes %}
+      <h6 class="fw-bold">Notes</h6>
+      <p>{{ notes }}</p>
+      {% endif %}
+    </div>
+
+
+  </div>
+
+
+  </div>
+
+  <form id="saveForm" method="POST" action="{% url 'save_invoice' %}">
+    {% csrf_token %}
+
+
+
+    <input type="hidden" name="invoice_number" value="{{ invoice_number }}">
+    <input type="hidden" name="from_name" value="{{ from }}">
+    <input type="hidden" name="bill_to" value="{{ bill_to }}">
+    <input type="hidden" name="ship_to" value="{{ ship_to }}">
+    <input type="hidden" name="invoice_date" value="{{ invoice_date|date:'Y-m-d' }}">
+    <input type="hidden" name="payment_terms" value="{{ payment_terms }}">
+    <input type="hidden" name="due_date" value="{{ due_date|date:'Y-m-d' }}">
+    <input type="hidden" name="po_number" value="{{ po_number }}">
+    <input type="hidden" name="notes" value="{{ notes }}">
+    <input type="hidden" name="terms" value="{{ terms }}">
+    <input type="hidden" name="tax_rate" value="{{ tax }}">
+    <input type="hidden" name="amount_paid" value="{{ amount_paid }}">
+    <input type="hidden" name="currency" value="USD">
+
+    {% for item in items %}
+    <input type="hidden" name="description_{{ forloop.counter0 }}" value="{{ item.description }}">
+    <input type="hidden" name="quantity_{{ forloop.counter0 }}" value="{{ item.quantity }}">
+    <input type="hidden" name="rate_{{ forloop.counter0 }}" value="{{ item.rate }}">
+    {% endfor %}
+    <input type="hidden" name="total_items" value="{{ items|length }}">
+  </form>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    function submitFormToSave() {
+      document.getElementById("saveForm").submit();
+    }
+
+    function downloadAsPDF() {
+      window.print();
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+      let items = document.querySelectorAll(".amount-cell");
+
+      let subtotal = 0;
+      items.forEach(cell => {
+        let qty = parseFloat(cell.dataset.quantity) || 0;
+        let rate = parseFloat(cell.dataset.rate) || 0;
+        let amount = qty * rate;
+        subtotal += amount;
+        cell.textContent = "$" + amount.toFixed(2);
+      });
+
+      // Get values from totals
+      let tax = parseFloat(document.getElementById("tax").textContent.replace('$', '')) || 0;
+      let discount = parseFloat(document.getElementById("discount").textContent.replace('$', '')) || 0;
+      let shipping = parseFloat(document.getElementById("shipping").textContent.replace('$', '')) || 0;
+      let amountPaid = parseFloat(document.getElementById("amount_paid").textContent.replace('$', '')) || 0;
+
+      let total = subtotal - discount + tax + shipping;
+      let balanceDue = total - amountPaid;
+
+      document.getElementById("subtotal").textContent = "$" + subtotal.toFixed(2);
+      document.getElementById("total").textContent = "$" + total.toFixed(2);
+      document.getElementById("balance_due").textContent = "$" + balanceDue.toFixed(2);
+    });
+
+
+
+  </script>
+
+</body>
+
+</html>

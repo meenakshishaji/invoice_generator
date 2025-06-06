@@ -1,0 +1,74 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sign Up - Invoice Generator{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4 mt-5">
+    <img src="{% static 'images/logo.png' %}" alt="Invoice Generator Logo" class="logo mb-4" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'120\' height=\'40\'><rect width=\'30\' height=\'40\' x=\'45\' fill=\'%2342B883\'/><rect width=\'10\' height=\'10\' x=\'25\' y=\'15\' fill=\'%2387CEEB\'/><rect width=\'10\' height=\'10\' x=\'35\' y=\'15\' fill=\'%2387CEEB\'/></svg>'" style="height: 40px;">
+    <h2 class="logo-text">Invoice-Generator.com</h2>
+</div>
+
+<div class="card shadow">
+    <div class="card-body p-4">
+        <h2 class="text-center mb-2">Create a free account</h2>
+        <p class="text-center text-muted mb-4">Gain access to more features with an Invoice-Generator.com account.</p>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="id_first_name" class="form-label">First Name</label>
+                    <input type="text" name="first_name" class="form-control" id="id_first_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="id_last_name" class="form-label">Last Name</label>
+                    <input type="text" name="last_name" class="form-control" id="id_last_name" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                <input type="email" name="email" class="form-control" id="id_email" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Password</label>
+                <div class="input-group">
+                    <input type="password" name="password" class="form-control" id="id_password" required>
+                    <span class="input-group-text">
+                        <button type="button" class="btn btn-link p-0 border-0" onclick="togglePassword()">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <div class="form-check">
+                    <input type="checkbox" name="terms" class="form-check-input" id="id_terms" required>
+                    <label class="form-check-label" for="id_terms">I agree to the <a href="#" class="text-secondary">Terms of Service</a></label>
+                </div>
+            </div>
+            
+            <div class="d-grid mb-3">
+                <button type="submit" class="btn btn-success">Sign Up</button>
+            </div>
+        </form>
+        
+        <div class="text-center mt-3">
+            <p class="mb-0 text-muted">Already have an account? <a href="{% url 'login' %}" class="text-success">Sign In</a>.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,179 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice-page {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            margin: 30px auto;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .invoice-page {
+                box-shadow: none;
+                border-radius: 0;
+                width: 100%;
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="invoice-page">
+
+    <!-- Header -->
+    <div>
+        <h2 class="fw-bold mb-1">Invoice <span class="text-muted">#{{ invoice.invoice_number }}</span></h2>
+        <p class="text-muted mb-3">{{ invoice.invoice_date }}</p>
+    </div>
+
+    <!-- Buttons -->
+    <div>
+        <a href="{% url 'dashboard' %}" class="btn btn-success">Back</a>
+    </div>
+
+    <!-- Line -->
+    <hr class="my-4">
+
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <!-- Left: Logo & Address -->
+        <div style="flex: 1;">
+           <div class="logo-placeholder small-logo mb-3" id="logo-placeholder" style="cursor:pointer">
+    {% if invoice.logo %}
+        <img src="{{ invoice.logo.url }}" alt="Logo" style="max-height: 80px; max-width: 150px; object-fit: contain;">
+    {% else %}
+        + Add Logo
+    {% endif %}
+</div>
+
+            <div class="mb-2">
+                <p><strong></strong><br>{{ invoice.from_name }}</p>
+            </div>
+            <div class="d-flex gap-4 mb-4">
+                <div style="flex: 1;">
+                    <p><strong>Bill To:</strong><br>{{ invoice.bill_to }}</p>
+                </div>
+                <div style="flex: 1;">
+                    <p><strong>Ship To:</strong><br>{{ invoice.ship_to }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Details -->
+        <div style="width: 280px;">
+            <h2 class="fw-bold text-end">INVOICE</h2>
+            <p class="text-end"><strong>#{{ invoice.invoice_number }}</strong></p>
+            <p class="text-end"><strong>Date:</strong> {{ invoice.invoice_date }}</p>
+            <p class="text-end"><strong>Payment Terms:</strong> {{ invoice.payment_terms }}</p>
+            <p class="text-end"><strong>Due Date:</strong> {{ invoice.due_date }}</p>
+            <p class="text-end"><strong>PO Number:</strong> {{ invoice.po_number }}</p>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+            <tr>
+                <th style="width: 50%;">Item</th>
+                <th style="width: 10%;">Quantity</th>
+                <th style="width: 20%;">Rate</th>
+                <th style="width: 20%;">Amount</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.rate }}</td>
+                    <td class="text-end">${{ item.amount }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totals -->
+    <div class="row justify-content-end mt-4">
+        <div class="col-md-6">
+            <table class="table borderless">
+                <tr>
+                    <td class="text-end"><strong>Subtotal:</strong></td>
+                    <td class="text-end">${{ invoice.subtotal }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Tax:</strong></td>
+                    <td class="text-end">${{ invoice.tax_rate }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Discount:</strong></td>
+                    <td class="text-end">${{ invoice.discount }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Shipping:</strong></td>
+                    <td class="text-end">${{ invoice.shipping }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Total:</strong></td>
+                    <td class="text-end">${{ invoice.total }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Amount Paid:</strong></td>
+                    <td class="text-end">${{ invoice.amount_paid }}</td>
+                </tr>
+                <tr>
+                    <td class="text-end"><strong>Balance Due:</strong></td>
+                    <td class="text-end">${{ invoice.balance_due }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Notes & Terms -->
+    <div class="mt-4" style="max-width: 60%;">
+        {% if invoice.terms %}
+            <h6 class="fw-bold">Terms</h6>
+            <p>{{ invoice.terms }}</p>
+        {% endif %}
+        {% if invoice.notes %}
+            <h6 class="fw-bold">Notes</h6>
+            <p>{{ invoice.notes }}</p>
+        {% endif %}
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

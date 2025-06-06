@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}My Invoices - Invoice Generator{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header with logo and nav -->
+    <div class="row py-3 align-items-center">
+        <div class="col-md-6">
+            <a href="{% url 'dashboard' %}">
+                <img src="{% static 'images/logo.png' %}" alt="Invoice-Generator.com" height="30">
+            </a>
+        </div>
+        <div class="col-md-6 text-end">
+            <ul class="nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'dashboard' %}">My Invoices</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Settings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-success btn-sm" href="#">Upgrade</a>
+                </li>
+                <li class="nav-item dropdown ms-3">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                        {{ request.user.first_name }} {{ request.user.last_name }}
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Cloud mode banner -->
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <strong>Introducing Cloud Mode!</strong> Now you can securely save your invoices to the cloud and access them from any device using your Invoice-Generator.com account. Enjoy seamless, convenient, and secure invoicing wherever you go!
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Invoices section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="card-title">My Invoices</h3>
+                        <a href="{% url 'new_invoice' %}" class="btn btn-success">New Invoice</a>
+                    </div>
+                    
+                  {% if invoices %}
+<div class="list-group">
+    {% for invoice in invoices %}
+    <div class="list-group-item d-flex justify-content-between align-items-center py-3">
+        <div>
+            <div class="fw-bold">{{ invoice.bill_to }}</div>
+            <small class="text-muted">
+                <a href="{% url 'view_invoice' invoice.id %}" class="text-decoration-none">Invoice #{{ invoice.invoice_number }}</a>
+            </small>
+        </div>
+        <div>{{ invoice.invoice_date }}</div>
+        <div>{{ invoice.due_date }}</div>
+        <div>${{ invoice.total }}</div>
+        <div>
+            {% if invoice.balance_due == 0 %}
+                <span class="badge bg-success">Paid</span>
+            {% else %}
+                <span class="badge bg-warning text-dark">Unpaid</span>
+            {% endif %}
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-sm btn-light border dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                View
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="{% url 'view_invoice' invoice.id %}">View</a></li>
+                <li><a class="dropdown-item" href="{% url 'edit_invoice' invoice.id %}">Edit</a></li>
+                <li><a class="dropdown-item" href="#">Download</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form method="POST" action="{% url 'delete_invoice' invoice.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="dropdown-item text-danger" type="submit">Delete</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+
+{% else %}
+    <div class="text-muted">No invoices found.</div>
+{% endif %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <h6>RESOURCES</h6>
+            <ul class="list-unstyled">
+                <li><a href="#" class="text-decoration-none">Invoicing Guide</a></li>
+                <li><a href="#" class="text-decoration-none">Help</a></li>
+                <li><a href="#" class="text-decoration-none">Release Notes</a></li>
+                <li><a href="#" class="text-decoration-none">Developer API</a></li>
+            </ul>
+        </div>
+        <div class="col-md-6 text-end">
+            <p class="text-muted">© 2015-2025 Invoice-Generator.com</p>
+            <div class="social-icons">
+                <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="me-2"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="me-2"><i class="bi bi-youtube"></i></a>
+                <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+            </div>
+            <div class="mt-2">
+                <a href="#" class="text-decoration-none me-3">Terms of Service</a>
+                <a href="#" class="text-decoration-none">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
