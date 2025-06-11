@@ -63,17 +63,18 @@ WSGI_APPLICATION = 'invoicegenerator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+
+
 DATABASES = {
     'default': {
-         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'invoice_db',
-        'USER': 'root',
-        'PASSWORD': 'rootmysql',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'mysql.connector.django',
+        'NAME': os.environ.get('MYSQL_DATABASE', 'invoice_db'),
+        'USER': os.environ.get('MYSQL_USER', 'root'),
+        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'rootmysql'),
+        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
+        'PORT': os.environ.get('MYSQL_PORT', '3306'),
     }
 }
-
 
 
 
