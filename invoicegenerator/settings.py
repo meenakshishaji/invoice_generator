@@ -16,7 +16,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #DEBUG = False
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['.railway.app','localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
+ALLOWED_HOSTS = ['invoicegenerator-production-4185.up.railway.app','localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://invoicegenerator-production-4185.up.railway.app',
+]
 
 
 # Application definition
