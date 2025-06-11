@@ -6,7 +6,7 @@ cffi==1.17.1
 chardet==5.2.0
 charset-normalizer==3.4.2
 click==8.1.8
-colorama==0.4.6
+#colorama==0.4.6
 cryptography==45.0.2
 cssselect2==0.8.0
 defusedxml==0.7.1
@@ -25,14 +25,14 @@ pyHanko==0.27.1
 pyhanko-certvalidator==0.26.8
 pypdf==5.5.0
 python-bidi==0.6.6
-PyYAML==6.0.2
+#PyYAML==6.0.2
 qrcode==8.2
 reportlab==4.4.1
 requests==2.32.3
 six==1.17.0
 sqlparse==0.5.3
 svglib==1.5.1
-tinycss2==1.4.0
+#tinycss2==1.4.0
 tzdata==2025.2
 tzlocal==5.3.1
 uritools==5.0.0
