@@ -7,16 +7,11 @@ from django.contrib import messages
 from django.db import IntegrityError
 #from django.http import HttpResponse
 from django import forms
-
 from django.http import HttpResponseBadRequest
 #from django.template.loader import get_template
 from datetime import datetime
-
-
- 
 from .models import Invoice, InvoiceItem, UserProfile
 from django.core.files.storage import FileSystemStorage
-
 
 # Custom forms
 class UserSignupForm(forms.Form):

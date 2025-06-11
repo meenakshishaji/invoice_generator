@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-sffj_3$q#oxe5m@v!y=bb3y7f+^-c0mnpiy6kaq$-pcjlgj__y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['meenakshi001.pythonanywhere.com']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
 
 
 # Application definition
@@ -73,6 +73,23 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+
+
+
+
+
+# DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.postgresql',
+   #     'NAME': 'invoice_db',
+    #    'USER': 'postgres',
+     #   'PASSWORD': 'rootpostgresql',
+      #  'HOST': 'localhost', 
+       # 'PORT': '5432',
+   # }
+#}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
