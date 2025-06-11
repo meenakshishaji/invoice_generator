@@ -10,12 +10,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-sffj_3$q#oxe5m@v!y=bb3y7f+^-c0mnpiy6kaq$-pcjlgj__y'
+#SECRET_KEY = 'django-insecure-sffj_3$q#oxe5m@v!y=bb3y7f+^-c0mnpiy6kaq$-pcjlgj__y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+#DEBUG = False
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
+ALLOWED_HOSTS = ['.railway.app','localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
 
 
 # Application definition
@@ -62,20 +63,18 @@ WSGI_APPLICATION = 'invoicegenerator.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-
+SECRET_KEY = os.environ.get('SECRET_KEY', 'dummy-key-for-dev')
 
 DATABASES = {
-    'default': {
+    'default':{
         'ENGINE': 'mysql.connector.django',
-        'NAME': os.environ.get('MYSQL_DATABASE', 'invoice_db'),
-        'USER': os.environ.get('MYSQL_USER', 'root'),
-        'PASSWORD': os.environ.get('MYSQL_PASSWORD', 'rootmysql'),
-        'HOST': os.environ.get('MYSQL_HOST', 'localhost'),
-        'PORT': os.environ.get('MYSQL_PORT', '3306'),
+        'NAME': os.environ.get('MYSQLDATABASE'),
+        'USER': os.environ.get('MYSQLUSER'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
+        'HOST': os.environ.get('MYSQLHOST'),
+        'PORT': os.environ.get('MYSQLPORT'),
     }
 }
-
 
 
 
