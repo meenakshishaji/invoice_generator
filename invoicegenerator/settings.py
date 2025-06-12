@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = 'django-insecure-sffj_3$q#oxe5m@v!y=bb3y7f+^-c0mnpiy6kaq$-pcjlgj__y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = False
+#DEBUG = True
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['invoice-generator-675b.onrender.com','invoicegenerator-production-4185.up.railway.app','localhost','127.0.0.1','meenakshi001.pythonanywhere.com']
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,9 +80,21 @@ DATABASES = {
         'HOST': os.environ.get('MYSQLHOST'),
         'PORT': os.environ.get('MYSQLPORT'),
     }
+ }
+ 
+""" 
+DATABASES = {
+    'default': {
+        'ENGINE': 'mysql.connector.django',
+        'NAME': 'invoice_db',
+        'USER': 'root',
+        'PASSWORD': 'rootmysql',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
 }
 
-
+ """
 
 
 # DATABASES = {
