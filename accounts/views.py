@@ -288,6 +288,19 @@ def create_invoice(request):
         except ValueError:
             invoice.amount_paid = 0.0
 
+       
+        try:
+            invoice.discount = float(request.POST.get('discount', 0))
+        except ValueError:
+            invoice.discount = 0
+
+        try:
+            invoice.shipping = float(request.POST.get('shipping', 0))
+        except ValueError:
+            invoice.shipping = 0
+
+        
+       
         # Logo
         logo_file = request.FILES.get('logo')
         logo_url = None
@@ -296,6 +309,29 @@ def create_invoice(request):
             filename = fs.save(logo_file.name, logo_file)
             invoice.logo = logo_file  # Save to DB
             logo_url = fs.url(filename)
+       
+        if not logo_file and 'logo_url' in request.POST:
+           logo_url = request.POST.get('logo_url')
+
+       
+        subtotal = sum([float(amount) for amount in request.POST.getlist('amount[]')])
+        tax_rate = float(request.POST.get('tax_rate', 0))
+        tax_amount = subtotal * (tax_rate / 100)
+        discount = float(request.POST.get('discount', 0))
+        shipping = float(request.POST.get('shipping', 0))
+        total = subtotal + tax_amount + shipping - discount
+        amount_paid = float(request.POST.get('amount_paid', 0))
+        balance_due = total - amount_paid
+
+        invoice.subtotal = subtotal
+        invoice.tax_rate = tax_rate
+        invoice.discount = discount
+        invoice.shipping = shipping
+        invoice.total = total
+        invoice.amount_paid = amount_paid
+        invoice.balance_due = balance_due
+  
+
         invoice.save()
 
         # Save line items

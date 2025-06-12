@@ -49,31 +49,17 @@ class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     from_name = models.CharField(max_length=100, default="YourCompanyName")
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    shipping = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    balance_due = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
 
     def __str__(self):
         return f"Invoice #{self.invoice_number} - {self.bill_to}"
     
-    @property
-    def subtotal(self):
-        
-        return sum(item.amount for item in self.items.all())
     
-    @property
-    def tax_amount(self):
-       
-        return self.subtotal * (self.tax_rate / 100)
-    
-    @property
-    def total(self):
-        
-        return self.subtotal + self.tax_amount
-    
-    @property
-    def balance_due(self):
-      
-        return self.total - self.amount_paid
-
-
 class InvoiceItem(models.Model):
    
     invoice = models.ForeignKey(Invoice, related_name='items', on_delete=models.CASCADE)
