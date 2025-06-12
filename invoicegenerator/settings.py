@@ -2,17 +2,9 @@
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-sffj_3$q#oxe5m@v!y=bb3y7f+^-c0mnpiy6kaq$-pcjlgj__y'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
@@ -24,7 +16,6 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -70,37 +61,25 @@ WSGI_APPLICATION = 'invoicegenerator.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dummy-key-for-dev')
-
-DATABASES = {
-    'default':{
-        'ENGINE': 'mysql.connector.django',
-        'NAME': os.environ.get('MYSQLDATABASE'),
-        'USER': os.environ.get('MYSQLUSER'),
-        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
-        'HOST': os.environ.get('MYSQLHOST'),
-        'PORT': os.environ.get('MYSQLPORT'),
-    }
- }
- 
-""" 
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': 'invoice_db',
+        'NAME': 'railway',  # from the end of the URL
         'USER': 'root',
-        'PASSWORD': 'rootmysql',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'PASSWORD': 'GnGISkolKuxOLJojPcltMsbbRjkSaZdm',
+        'HOST': 'switchback.proxy.rlwy.net',
+        'PORT': '18087',
     }
 }
 
- """
+
+  
 
 
 # DATABASES = {
  #   'default': {
   #      'ENGINE': 'django.db.backends.postgresql',
-   #     'NAME': 'invoice_db',
+   #     'NAME': 'c',
     #    'USER': 'postgres',
      #   'PASSWORD': 'rootpostgresql',
       #  'HOST': 'localhost', 
@@ -109,7 +88,6 @@ DATABASES = {
 #}
 
 
-# Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
