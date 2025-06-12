@@ -315,12 +315,15 @@ def create_invoice(request):
 
        
         subtotal = sum([float(amount) for amount in request.POST.getlist('amount[]')])
-        tax_rate = float(request.POST.get('tax_rate', 0))
+        tax_rate = float(request.POST.get('tax_rate') or 0)
+        discount = float(request.POST.get('discount') or 0)
+        shipping = float(request.POST.get('shipping') or 0)
+        amount_paid = float(request.POST.get('amount_paid') or 0)
+
+        
+        
         tax_amount = subtotal * (tax_rate / 100)
-        discount = float(request.POST.get('discount', 0))
-        shipping = float(request.POST.get('shipping', 0))
         total = subtotal + tax_amount + shipping - discount
-        amount_paid = float(request.POST.get('amount_paid', 0))
         balance_due = total - amount_paid
 
         invoice.subtotal = subtotal
