@@ -307,7 +307,7 @@ def create_invoice(request):
         if logo_file:
             fs = FileSystemStorage()
             filename = fs.save(logo_file.name, logo_file)
-            invoice.logo = logo_file  # Save to DB
+            invoice.logo.name = filename   # Save to DB
             logo_url = fs.url(filename)
        
         if not logo_file and 'logo_url' in request.POST:
