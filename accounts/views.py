@@ -303,8 +303,7 @@ def create_invoice(request):
        
         # Logo
         logo_file = request.FILES.get('logo')
-       
-        """   logo_url = None
+        logo_url = None
         if logo_file:
             fs = FileSystemStorage()
             filename = fs.save(logo_file.name, logo_file)
@@ -314,21 +313,7 @@ def create_invoice(request):
         if not logo_file and 'logo_url' in request.POST:
            logo_url = request.POST.get('logo_url')
 
-        """
-    
        
-    
-        if logo_file:
-            invoice.logo = logo_file
-
-# Save invoice first to get correct logo path
-        invoice.save()
-
-# Now get the logo URL from the model
-        logo_url = invoice.logo.url if invoice.logo else None
-
-
-
         subtotal = sum([float(amount) for amount in request.POST.getlist('amount[]')])
         tax_rate = float(request.POST.get('tax_rate') or 0)
         discount = float(request.POST.get('discount') or 0)
@@ -380,7 +365,7 @@ def create_invoice(request):
             'bill_to': request.POST.get('bill_to'),
             'ship_to': request.POST.get('ship_to'),
             'po_number': request.POST.get('po_number'),
-            'logo_url': logo_url,
+            'logo': logo_url,
             'invoice_date': request.POST.get('invoice_date'),
             'due_date': request.POST.get('due_date'),
             'payment_terms': request.POST.get('payment_terms'),
