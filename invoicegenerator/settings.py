@@ -19,7 +19,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://invoicegenerator-production-4185.up.railway.app',
 ]
 
-
+ 
 
 INSTALLED_APPS = [
     'django.contrib.admin',
