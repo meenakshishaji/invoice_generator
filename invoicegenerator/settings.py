@@ -1,8 +1,8 @@
 
 import os
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+#import cloudinary
+#import cloudinary.uploader
+#import cloudinary.api
 
 from pathlib import Path
 
@@ -29,8 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    'cloudinary',
-    'cloudinary_storage',
+    
 ]
 
 MIDDLEWARE = [
@@ -70,7 +69,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'dummy-key-for-dev')
 DATABASES = {
     'default': {
         'ENGINE': 'mysql.connector.django',
-        'NAME': 'railway',  # from the end of the URL
+        'NAME': 'railway', 
         'USER': 'root',
         'PASSWORD': 'GnGISkolKuxOLJojPcltMsbbRjkSaZdm',
         'HOST': 'switchback.proxy.rlwy.net',
@@ -154,10 +153,10 @@ MESSAGE_TAGS = {
 }
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+#SDEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'ddavjd91u',
-    'API_KEY': '585789112179473',
-    'API_SECRET': '11Y9KYq5DF98kjiEaGQmeA2kR8o',
-}
+#CLOUDINARY_STORAGE = {
+ #   'CLOUD_NAME': 'ddavjd91u',
+  #  'API_KEY': '585789112179473',
+  #  'API_SECRET': '11Y9KYq5DF98kjiEaGQmeA2kR8o',
+#}
